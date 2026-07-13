@@ -1,0 +1,230 @@
+/* ==========================================================================
+   LEGEND MULTIBIZ — Global Stylesheet
+   --------------------------------------------------------------------------
+   Tailwind v4 syntax: use @import "tailwindcss" (NOT @tailwind base/etc.)
+   
+   Cosmetics store  → Soft rose/cream palette (current)
+   Laptop store     → Change --brand-* CSS variables below only
+   ========================================================================== */
+
+/* ── Google Fonts (MUST come before @import "tailwindcss" — Tailwind's
+       import expands into hundreds of lines of real CSS rules, and any
+       @import placed after it would then violate the CSS rule that all
+       @import statements must precede every other rule) ──────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+
+/* ── Tailwind v4 import (replaces the old @tailwind base/components/utilities) */
+@import "tailwindcss";
+
+/* ==========================================================================
+   DESIGN TOKENS
+   To reskin for a laptop store: only change --brand-* and --accent-* below.
+   Everything else (spacing, shadows, fonts) stays the same.
+   ========================================================================== */
+:root {
+  /* Brand colors — currently rose/pink for cosmetics */
+  --brand-50:  #fdf2f8;
+  --brand-100: #fce7f3;
+  --brand-200: #fbcfe8;
+  --brand-500: #ec4899;
+  --brand-600: #db2777;
+  --brand-700: #be185d;
+
+  /* Accent */
+  --accent-dark: #1a1a2e;
+  --accent-soft: #f0e6ff;
+
+  /* Surfaces */
+  --surface-bg:     #fafafa;
+  --surface-card:   #ffffff;
+  --surface-subtle: #f5f5f7;
+  --surface-border: #e8e8ec;
+
+  /* Text */
+  --text-primary:   #0a0a0f;
+  --text-secondary: #6b6b80;
+  --text-muted:     #a3a3b8;
+
+  /* Status */
+  --success:  #16a34a;
+  --warning:  #d97706;
+  --danger:   #dc2626;
+  --wa-green: #25d366;
+
+  /* Fonts */
+  --font-display: 'Sora', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+
+  /* Spring easing */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ==========================================================================
+   BASE STYLES
+   ========================================================================== */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: #d1d1d6;
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
+  overscroll-behavior: none;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* ==========================================================================
+   KEYFRAME ANIMATIONS
+   ========================================================================== */
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes scalePop {
+  0%   { transform: scale(0.82); opacity: 0; }
+  65%  { transform: scale(1.04); }
+  100% { transform: scale(1);    opacity: 1; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes pulseGreen {
+  0%, 100% { box-shadow: 0 0 0 0    rgba(37, 211, 102, 0.45); }
+  50%       { box-shadow: 0 0 0 14px rgba(37, 211, 102, 0);   }
+}
+
+@keyframes heartBeat {
+  0%   { transform: scale(1);    }
+  30%  { transform: scale(1.35); }
+  60%  { transform: scale(0.9);  }
+  80%  { transform: scale(1.12); }
+  100% { transform: scale(1);    }
+}
+
+@keyframes dotPulse {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40%            { transform: scale(1);   opacity: 1;   }
+}
+
+/* ==========================================================================
+   UTILITY CLASSES
+   (Tailwind v4 can't generate these dynamically from CSS vars, so we
+    define them here as plain CSS classes instead)
+   ========================================================================== */
+
+/* --- Animation helpers --- */
+.animate-fade-slide-up { animation: fadeSlideUp 0.45s ease both; }
+.animate-fade-in       { animation: fadeIn 0.3s ease both;       }
+.animate-scale-pop     { animation: scalePop 0.4s var(--ease-spring) both; }
+.animate-pulse-green   { animation: pulseGreen 1.6s infinite;    }
+.animate-heart-beat    { animation: heartBeat 0.45s ease;        }
+
+/* --- Staggered entrance delays for list items --- */
+.stagger-1 { animation-delay: 60ms;  }
+.stagger-2 { animation-delay: 120ms; }
+.stagger-3 { animation-delay: 180ms; }
+.stagger-4 { animation-delay: 240ms; }
+.stagger-5 { animation-delay: 300ms; }
+.stagger-6 { animation-delay: 360ms; }
+.stagger-7 { animation-delay: 420ms; }
+.stagger-8 { animation-delay: 480ms; }
+
+/* --- Hide scrollbar (for horizontal scroll rows) --- */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* --- Skeleton shimmer loader --- */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 14px;
+}
+
+/* --- Frosted glass panel --- */
+.glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+}
+
+/* --- Press / tap feedback for buttons --- */
+.tap-scale {
+  transition: transform 150ms ease, opacity 150ms ease;
+}
+.tap-scale:active {
+  transform: scale(0.94);
+  opacity: 0.8;
+}
+
+/* --- Bottom nav padding so content isn't hidden behind nav bar --- */
+.pb-nav { padding-bottom: 84px; }
+
+/* --- Safe area for notched phones (iPhone X+, etc.) --- */
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom, 20px); }
+.safe-top    { padding-top:    env(safe-area-inset-top, 0px);     }
+
+/* --- Brand badge styles reused on cards and detail page --- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.badge-bestseller {
+  background: rgba(0, 0, 0, 0.72);
+  color: #ffffff;
+  backdrop-filter: blur(8px);
+}
+
+.badge-cruelty-free {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+/* --- Dot loading indicator (3 bouncing dots) --- */
+.dot-loader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.dot-loader span {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand-500);
+  animation: dotPulse 1.2s infinite both;
+}
+.dot-loader span:nth-child(2) { animation-delay: 0.2s; }
+.dot-loader span:nth-child(3) { animation-delay: 0.4s; }
