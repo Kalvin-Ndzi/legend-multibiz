@@ -26,7 +26,7 @@ interface Product {
   is_cruelty_free: boolean;
   rating: number;
   review_count: number;
-  categories: { name: string };
+  category_name: string; // flattened from the joined categories table below
 }
 
 export default function ProductDetailPage() {
@@ -52,9 +52,37 @@ export default function ProductDetailPage() {
 
     if (error) {
       console.error("[ProductDetail] fetchProduct error:", error.message);
+      setProduct(null);
+      setLoading(false);
+      return;
     }
 
-    setProduct(data ?? null);
+    /*
+     * Supabase's generated types treat every joined table as a possible
+     * array (it can't know at compile time that category_id is unique
+     * per product), so `data.categories` comes back typed as an array
+     * even though there's only ever one row here. We flatten it into a
+     * plain string the same way ProductGrid does, sidestepping the
+     * mismatch entirely instead of fighting the generated types.
+     */
+    const raw = data as any;
+    const formatted: Product = {
+      id:              raw.id,
+      name:            raw.name,
+      price_cfa:       raw.price_cfa,
+      stock_quantity:  raw.stock_quantity,
+      description:     raw.description,
+      image_url:       raw.image_url,
+      is_best_seller:  raw.is_best_seller,
+      is_cruelty_free: raw.is_cruelty_free,
+      rating:          raw.rating,
+      review_count:    raw.review_count,
+      category_name:   Array.isArray(raw.categories)
+        ? (raw.categories[0]?.name ?? "Uncategorised")
+        : (raw.categories?.name ?? "Uncategorised"),
+    };
+
+    setProduct(formatted);
     setLoading(false);
   }
 
@@ -148,7 +176,7 @@ export default function ProductDetailPage() {
               style={{ background: "linear-gradient(145deg, #f8f4ff 0%, #fce7f3 60%, #fdf2f8 100%)" }}
             />
             <div className="absolute inset-0">
-              <ImagePlaceholder category={product.categories?.name} large />
+              <ImagePlaceholder category={product.category_name} large />
             </div>
           </>
         )}
@@ -180,7 +208,7 @@ export default function ProductDetailPage() {
         </div>
 
         <p className="text-xs text-gray-400 uppercase tracking-widest font-medium">
-          {product.categories?.name}
+          {product.category_name}
         </p>
 
         <h1 className="text-xl font-bold text-gray-900 leading-tight" style={{ fontFamily: "var(--font-display)" }}>
